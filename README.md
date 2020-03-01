@@ -1,6 +1,6 @@
 ## Sendit Courier App
 
-<!-- [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f19588cd49244775994cdca6a5b28434)](https://www.codacy.com/manual/dbytecoderc/sendit_api?utm_source=github.com&utm_medium=referral&utm_content=dbytecoderc/sendit_api&utm_campaign=Badge_Grade) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/dbytecoderc/sendit_api.svg?branch=develop)](https://travis-ci.org/dbytecoderc/sendit_api) [![Coverage Status](https://coveralls.io/repos/github/dbytecoderc/sendit_api/badge.svg?branch=develop)](https://coveralls.io/github/dbytecoderc/sendit_api?branch=develop) [![Maintainability](https://api.codeclimate.com/v1/badges/a959c189a724330370e5/maintainability)](https://codeclimate.com/github/dbytecoderc/sendit_api/maintainability) -->
+[![Build Status](https://travis-ci.org/dbytecoderc/sendit-api.svg?branch=develop)](https://travis-ci.org/dbytecoderc/sendit-api) [![Coverage Status](https://coveralls.io/repos/github/dbytecoderc/sendit-api/badge.svg?branch=develop)](https://coveralls.io/github/dbytecoderc/sendit-api?branch=develop)
 
 [Postman API documentation](https://documenter.getpostman.com/view/6057580/SWE6bJZD)
 
@@ -74,6 +74,7 @@ I created a test user to ease the process of testing the application
   DB_NAME=dbname
   DB_USER=dbuser
   DB_PASSWORD=secretpassword
+  DB_HOST=yourdatabasehost
   ```
 
 ```
@@ -194,7 +195,7 @@ docker-compose run app sh -c "coverage report"
 The `docker-compose up -d` or `make start` command starts the application while ensuring that the postgres database is seeded before the api starts.
 
 To stop the running containers run the command `docker-compose down`
-
+```
 
 ## API Endpoints
 
@@ -206,64 +207,9 @@ To stop the running containers run the command `docker-compose down`
   </tr>
     <tr>
       <td>POST</td>
-      <td>/api/user/create/</td>
+      <td>/api/v1/users/</td>
       <td>Register a User</td>
-  </tr>
-  <tr>
-    <td>POST</td>
-    <td>/api/user/login/</td>
-    <td>Login a user</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/api/category/categories/</td>
-    <td>Get all categories</td>
-  </tr>
-  <tr>
-    <td>POST</td>
-    <td>/api/category/categories/</td>
-    <td>Create a new category</td>
-  </tr>
-  <tr>
-    <td>POST</td>
-    <td>/api/favorite/favorites/</td>
-    <td>Create a favorite thing</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/api/favorite/favorites/</td>
-    <td>Get all favorite things</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/api/favorite/favorites/{int:id}</td>
-    <td>Get the details of a favorite thing</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/api/favorite/favorites/?category_id={int: categoryId}</td>
-    <td>Get all favorite thing in category</td>
-  </tr>
-  <tr>
-    <td>PUT</td>
-    <td>/api/favorite/favorites/{int:id}</td>
-    <td>Update a favorite thing</td>
-  </tr>
-  <tr>
-    <td>GET</td>
-    <td>/api/favorite/history/</td>
-    <td>Get audit log for user</td>
   </tr>
 </table>
 
-- Entity Realtionship diagram
-
-![entity relationship diagram (2)](https://user-images.githubusercontent.com/19865565/61914085-3217e680-af37-11e9-9982-0a0d09f2b36e.png)
-
-## Other Links
-
-1. Link to the description of myself is [myself.json](https://github.com/tonyguesswho/favorite-things/blob/update-readme/myself.json)
-2. Link to the answers to the remaining technical questions is [answers.md](https://github.com/tonyguesswho/favorite-things/blob/update-readme/answers.md)
-
-I will appreciate any feedback on this project :)
-```
+#### I will appreciate any feedback on this project :)

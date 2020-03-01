@@ -12,12 +12,14 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.urls import include, path
 from django.contrib import admin
+from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    # url(r'^api/', include('sendit.apps.authentication.urls', namespace='authentication')),
-    path('api/v1/', include('sendit.apps.authentication.urls', namespace='app_authentication')),
-    path('', include('sendit.apps.authentication.urls')),
+    path("admin/", admin.site.urls),
+    path(
+        "api/v1/",
+        include("sendit.apps.authentication.urls", namespace="app_authentication"),
+    ),
+    path("", include("sendit.apps.authentication.urls")),
 ]

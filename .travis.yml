@@ -2,36 +2,13 @@ language: python
 
 # Install dependencies
 install:
-  - pip install -r requirements.txt
-
-services:
-  - postgresql
-addons:
-  postgresql: "9.4"
-  apt:
-    packages:
-      - postgresql-server-dev-9.4
-
-# Run tests
-before_script:
-  - python manage.py collectstatic
-  - psql -c 'create database fulldeck;' -U postgres
-  - psql -c "ALTER USER postgres WITH PASSWORD 'fulldeck';" -U postgres
-  - python manage.py makemigrations
-  - python manage.py migrate
-
+  - pip install tox
 
 matrix:
 include:
     - python: 3.7
     env:
         - TOX_ENV=py37
-
-script: 
   
 script:
   - tox -e $TOX_ENV
-
-  # Run coveralls
-after_success:
-  - coveralls
