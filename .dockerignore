@@ -1,0 +1,16 @@
+.env.example
+.coverage
+.gitignore
+.travis.yml
+.hound.ymlProctile
+pyproject.toml
+.github
+htmlcov
+.tox
+hound.yml
+LICENSE
+.pre-commit-config.yaml
+.flake8
+.vscode
+sendit-api/env
+README.md
