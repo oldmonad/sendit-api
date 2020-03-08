@@ -15,7 +15,7 @@ class UserModelTestCase(TestCase):
         """
         self.assertIsInstance(
             User.objects.create_user(
-                username="username", password="password", email="user@mail.com"
+                full_name="full_name", password="password", email="user@mail.com"
             ),
             User,
         )

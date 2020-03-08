@@ -1,7 +1,7 @@
 from rest_framework.views import status
 
 # local imports
-from .base_test import TestBaseCase
+from sendit.apps.core.tests.base_test import TestBaseCase
 
 
 class TestRegistration(TestBaseCase):
@@ -22,12 +22,12 @@ class TestRegistration(TestBaseCase):
         response = self.signup_user()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_no_username_registration(self):
+    def test_no_full_name_registration(self):
         """
-        Username is required for registration
+        full_name is required for registration
         """
-        message = "Username is a required property"
-        self.base_signup(message, self.no_username)
+        message = "Full name is a required property"
+        self.base_signup(message, self.no_full_name)
 
     def test_no_email_registration(self):
         """
@@ -42,7 +42,6 @@ class TestRegistration(TestBaseCase):
         """
         self.test_user["user"]["email"] = "Invalid-email"
         message = "Email must be of the format name@domain.com"
-        # import pdb; pdb.set_trace()
         self.base_signup(message)
 
     def test_no_password_registration(self):
@@ -68,17 +67,9 @@ class TestRegistration(TestBaseCase):
         message = "Password must have at least a number, and a least an uppercase and a lowercase letter"
         self.base_signup(message)
 
-    def test_username_is_required(self):
+    def test_full_name_is_required(self):
         """
-        Username is a required property
+        full_name is a required property
         """
-        message = "Username is a required property"
-        self.base_signup(message, self.no_username)
-
-    def test_username_with_space(self):
-        """
-        Username cannot contain spaces
-        """
-        self.test_user["user"]["username"] = "Test Username"
-        message = "Username cannot contain a space or special character"
-        self.base_signup(message)
+        message = "Full name is a required property"
+        self.base_signup(message, self.no_full_name)
