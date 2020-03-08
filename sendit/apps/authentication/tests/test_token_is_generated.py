@@ -1,10 +1,10 @@
 # Django imports
 from rest_framework.views import status
 
-from ..models import User
-
 # local imports
-from .base_test import TestBaseCase
+from sendit.apps.core.tests.base_test import TestBaseCase
+
+from ..models import User
 
 
 class JwtTestCase(TestBaseCase):
@@ -35,7 +35,7 @@ class JwtTestCase(TestBaseCase):
         response = self.client.get(self.current_user_url)
         assert response.status_code == 200
         assert response.data["email"] == "test@user.com"
-        assert response.data["username"] == "testuser"
+        assert response.data["full_name"] == "testuser"
 
     def test_get_user_no_token(self):
         """Test getting a user with no token provided in the request"""

@@ -2,7 +2,7 @@
 from rest_framework.views import status
 
 # local imports
-from .base_test import TestBaseCase
+from sendit.apps.core.tests.base_test import TestBaseCase
 
 
 class TestLogin(TestBaseCase):

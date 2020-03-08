@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework.test import APITestCase
 
-from ..models import User
+from sendit.apps.authentication.models import User
 
 
 class TestBaseCase(APITestCase):
@@ -10,24 +10,40 @@ class TestBaseCase(APITestCase):
         self.login_url = reverse("app_authentication:login")
         self.current_user_url = reverse("app_authentication:current_user")
         self.invalid_token = "thsnmbnscjkxcmm.btydghvhjb"
+        self.list_users_url = reverse("profiles:profile_list")
 
         self.no_email = ["email"]
-        self.no_username = ["username"]
+        self.no_full_name = ["full_name"]
         self.no_password = ["password"]
 
         self.user_email = None
 
         self.test_user = {
             "user": {
-                "username": "testuser",
+                "full_name": "testuser",
                 "email": "test@user.com",
                 "password": "TestUser123",
             }
         }
 
-        self.username = self.test_user["user"]["username"]
+        self.test_user2 = {
+            "user": {
+                "full_name": "testuser2",
+                "email": "test2@user.com",
+                "password": "TestUser123",
+            }
+        }
+
+        self.user_profile = {
+            "profile": {
+                "address": "Onipanu crecent",
+                "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+            }
+        }
+
+        self.email = self.test_user["user"]["email"]
         self.no_email = ["email"]
-        self.no_username = ["username"]
+        self.no_full_name = ["full_name"]
         self.no_password = ["password"]
         self.passwords = {
             "password": "Password0007",
@@ -43,6 +59,9 @@ class TestBaseCase(APITestCase):
     def signup_user(self):
         return self.client.post(self.signup_url, self.test_user, format="json")
 
+    def signup_user2(self):
+        return self.client.post(self.signup_url, self.test_user2, format="json")
+
     def activateable_user(self, user_email):
         try:
             self.user_email = User.objects.get(email=user_email)
@@ -55,7 +74,7 @@ class TestBaseCase(APITestCase):
             return False
 
     def login_user(self):
-        self.remove_data(self.no_username)
+        self.remove_data(self.no_full_name)
         if "email" in self.test_user["user"]:
             activateable_user = self.activateable_user(self.test_user["user"]["email"])
             if not activateable_user:
@@ -66,3 +85,6 @@ class TestBaseCase(APITestCase):
     def token(self):
         self.signup_user()
         return self.login_user().data["token"]
+
+    def get_profile_url(self, email):
+        return reverse("profiles:user_profile", args={email})

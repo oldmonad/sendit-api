@@ -2,6 +2,8 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
+from sendit.apps.profiles.serializers import ProfileSerializer
+
 from .models import User
 
 
@@ -56,22 +58,10 @@ class RegistrationSerializer(PasswordSerializer, serializers.ModelSerializer):
             "required": "Email is a required field",
         },
     )
-    # The username must be unique
-    # There should not be any space in the username
-    # Underscores and hyphens are also allowed in the username
 
-    username = serializers.RegexField(
-        regex=r"^(?!.*\ )[A-Za-z\d\-\_]+$",
+    full_name = serializers.CharField(
         required=True,
-        validators=[
-            UniqueValidator(
-                queryset=User.objects.all(), message="The username is already taken",
-            )
-        ],
-        error_messages={
-            "invalid": "Username cannot contain a space or special character",
-            "required": "Username is a required property",
-        },
+        error_messages={"required": "Full name is a required property",},  # noqa
     )
 
     # The client should not be able to send a token along with a registration
@@ -82,7 +72,7 @@ class RegistrationSerializer(PasswordSerializer, serializers.ModelSerializer):
         model = User
         # List all of the fields that could possibly be included in a request
         # or response, including fields specified explicitly above.
-        fields = ["email", "username", "password", "token"]
+        fields = ["email", "full_name", "password", "token"]
 
     def create(self, validated_data):
         # Use the `create_user` method we wrote earlier to create a new user.
@@ -91,7 +81,7 @@ class RegistrationSerializer(PasswordSerializer, serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=255)
-    username = serializers.CharField(max_length=255, read_only=True)
+    full_name = serializers.CharField(max_length=255, read_only=True)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
 
@@ -137,13 +127,15 @@ class LoginSerializer(serializers.Serializer):
         # The `validate` method should return a dictionary of validated data.
         # This is the data that is passed to the `create` and `update` methods
         # that we will see later on.
-        return {"email": user.email, "username": user.username, "token": user.token}
+        return {"email": user.email, "full_name": user.full_name, "token": user.token}
 
         return instance  # noqa
 
 
 class UserSerializer(serializers.ModelSerializer):
     """Handles serialization and deserialization of User objects."""
+
+    profile = ProfileSerializer(read_only=True)
 
     # Passwords must be at least 8 characters, but no more than 128
     # characters. These values are the default provided by Django. We could
@@ -153,7 +145,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "username", "password")
+        fields = ("email", "full_name", "password", "profile")
 
         # The `read_only_fields` option is an alternative for explicitly
         # specifying the field with `read_only=True` like we did for password

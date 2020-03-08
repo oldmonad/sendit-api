@@ -21,5 +21,6 @@ urlpatterns = [
         "api/v1/",
         include("sendit.apps.authentication.urls", namespace="app_authentication"),
     ),
+    path("api/v1/", include("sendit.apps.profiles.urls", namespace="profiles")),
     path("", include("sendit.apps.authentication.urls")),
 ]

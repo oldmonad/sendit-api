@@ -6,8 +6,8 @@ class AuthenticationAppConfig(AppConfig):
     label = "authentication"
     verbose_name = "Authentication"
 
-    # def ready(self):
-    #     import authors.apps.authentication.signals
+    def ready(self):
+        import sendit.apps.authentication.signals
 
 
 default_app_config = "sendit.apps.authentication.AuthenticationAppConfig"

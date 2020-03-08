@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime, timedelta
 
 import jwt
@@ -10,6 +9,8 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 
+from sendit.apps.core.base_model import CommonFieldsMixin
+
 
 class UserManager(BaseUserManager):
     """
@@ -20,21 +21,21 @@ class UserManager(BaseUserManager):
     to create `User` objects.
     """
 
-    def create_user(self, username, email, password=None):
-        """Create and return a `User` with an email, username and password."""
-        if username is None:
-            raise TypeError("Users must have a username.")
+    def create_user(self, full_name, email, password=None):
+        """Create and return a `User` with an email, full name and password."""
+        if full_name is None:
+            raise TypeError("Users must have a name.")
 
         if email is None:
             raise TypeError("Users must have an email address.")
 
-        user = self.model(username=username, email=self.normalize_email(email))
+        user = self.model(full_name=full_name, email=self.normalize_email(email))
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, full_name, email, password):
         """
         Create and return a `User` with superuser powers.
         Superuser powers means that this use is an admin that can do anything
@@ -43,7 +44,7 @@ class UserManager(BaseUserManager):
         if password is None:
             raise TypeError("Superusers must have a password.")
 
-        user = self.create_user(username, email, password)
+        user = self.create_user(full_name, email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -51,12 +52,12 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class User(AbstractBaseUser, PermissionsMixin, CommonFieldsMixin):
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # Each `User` needs a human-readable unique identifier that we can use to
     # represent the `User` in the UI. We want to index this column in the
     # database to improve lookup performance.
-    username = models.CharField(db_index=True, max_length=255, unique=True)
+    full_name = models.CharField(db_index=True, max_length=255)
 
     # We also need a way to contact the user and a way for the user to identify
     # themselves when logging in. Since we need an email address for contacting
@@ -83,18 +84,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     # until the account has been verified
     is_verified = models.BooleanField(default=False)
 
-    # A timestamp representing when this object was created.
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    # A timestamp reprensenting when this object was last updated.
-    updated_at = models.DateTimeField(auto_now=True)
-
     # More fields required by Django when specifying a custom user model.
 
     # The `USERNAME_FIELD` property tells us which field we will use to log in.
     # In this case, we want that to be the email field.
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
+    # REQUIRED_FIELDS = ["username"]
 
     # Tells Django that the UserManager class defined above should manage
     # objects of this type.
@@ -112,17 +107,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         This method is required by Django for things like handling emails.
         Typically, this would be the user's first and last name. Since we do
-        not store the user's real name, we return their username instead.
+        not store the user's real name, we return their full name instead.
         """
-        return self.username
+        return self.full_name
 
     def get_short_name(self):
         """
         This method is required by Django for things like handling emails.
         Typically, this would be the user's first name. Since we do not store
-        the user's real name, we return their username instead.
+        the user's real name, we return their full name instead.
         """
-        return self.username
+        return self.full_name
 
     @property
     def token(self):
