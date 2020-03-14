@@ -7,6 +7,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from dotenv import load_dotenv
 
 from sendit.apps.core.helpers.mail_handler import mail_handler
+from sendit.apps.core.helpers.redis import cache_data
 from sendit.apps.profiles.models import Profile
 
 from .models import User
@@ -26,7 +27,7 @@ def create_related_profile(sender, instance, created, *args, **kwargs):
         email_data = [
             "Sendit: Verification email",
             message_body,
-            f"{os.getenv('VERIFICATION_LINK').strip()}/{uid}",
+            f"{os.getenv('VERIFICATION_LINK').strip()}/verify/{uid}",
             instance.full_name.split(" ", 1)[0].capitalize(),
             "VERIFY EMAIL",
             "",
@@ -38,6 +39,8 @@ def create_related_profile(sender, instance, created, *args, **kwargs):
             "Sendit Account Verification",
             [instance.email,],  # noqa
         )
+
+        cache_data(uid, {"token": instance.token})
 
         instance.profile = Profile.objects.create(user=instance)
         return True

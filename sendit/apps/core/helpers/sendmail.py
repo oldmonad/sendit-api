@@ -14,7 +14,6 @@ class SendMail:
 
     def _compose_mail(self):
         html_body = render_to_string(self.template, self.context)
-        # import pdb; pdb.set_trace()
         subject = self.subject
         to_email = self.to_email
         message = EmailMessage(

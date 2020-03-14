@@ -1,5 +1,3 @@
-# from celery.decorators import task
-
 from sendit.apps.core.celery import app
 
 from .sendmail import SendMail
