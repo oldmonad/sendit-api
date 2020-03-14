@@ -133,7 +133,11 @@ class User(AbstractBaseUser, PermissionsMixin, CommonFieldsMixin):
         """
 
         dt = datetime.now() + timedelta(days=1)
-        data = {"email": self.email, "exp": int(dt.strftime("%s"))}
+        data = {
+            "email": self.email,
+            "active": self.is_active,
+            "exp": int(dt.strftime("%s")),
+        }
         token = jwt.encode(data, settings.SECRET_KEY, algorithm="HS256")
 
         return token.decode("utf-8")

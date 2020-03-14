@@ -1,15 +1,16 @@
-# import os
-from dotenv import load_dotenv
+import jwt
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from sendit.apps.core.helpers.redis import delete_cached_data, retrieve_cached_data
+from sendit.settings import SECRET_KEY
+
+from .models import User
 from .renderers import UserJSONRenderer
 from .serializers import LoginSerializer, RegistrationSerializer, UserSerializer
-
-load_dotenv()
 
 
 class HomeView(ListAPIView):
@@ -20,16 +21,12 @@ class HomeView(ListAPIView):
 
 
 class RegistrationAPIView(APIView):
-    # Allow any user (authenticated or not) to hit this endpoint.
     permission_classes = (AllowAny,)
     renderer_classes = (UserJSONRenderer,)
     serializer_class = RegistrationSerializer
 
     def post(self, request):
         user = request.data.get("user", {})
-        # The create serializer, validate serializer, save serializer pattern
-        # below is common and you will see it a lot throughout this course and
-        # your own work later on. Get familiar with it.
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -84,3 +81,20 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class VerifyAPIView(CreateAPIView):
+    serializer_class = UserSerializer
+
+    def get(self, request, uid):
+        token = retrieve_cached_data(uid)["token"]
+        email = jwt.decode(token, SECRET_KEY)["email"]
+        user = User.objects.get(email=email)
+        user.is_verified = True
+        user.is_active = True
+        user.save()
+        delete_cached_data(uid)
+
+        return Response(
+            {"message": "Your email has been verified successfully, thank you!"}
+        )
