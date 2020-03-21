@@ -11,7 +11,7 @@ class TestRegistration(TestBaseCase):
 
     def base_signup(self, message, credentials=None):
         self.remove_data(credentials)
-        response = self.signup_user()
+        response = self.regular_signup()
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn(message.encode(), response.content)
 
@@ -19,7 +19,7 @@ class TestRegistration(TestBaseCase):
         """
         User can be registered using the API
         """
-        response = self.signup_user()
+        response = self.regular_signup()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_no_full_name_registration(self):

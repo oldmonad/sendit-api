@@ -16,21 +16,21 @@ class JwtTestCase(TestBaseCase):
     def test_token_on_register(self):
         """if user is registers successfully, a token is generated"""
 
-        response = self.signup_user()
+        response = self.regular_signup()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn("token", response.data["user_info"])
 
     def test_token_on_login(self):
         """Test if a user logs in successfully, a token is generated"""
-        self.signup_user()
-        response = self.login_user()
+        self.regular_signup()
+        response = self.regular_login()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("token", response.data)
 
     def test_get_current_user(self):
         """Test to get current user when token is passed in the request"""
-        self.signup_user()
-        token = self.login_user().data["token"]
+        self.regular_signup()
+        token = self.regular_login().data["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         response = self.client.get(self.current_user_url)
         assert response.status_code == 200
@@ -50,8 +50,8 @@ class JwtTestCase(TestBaseCase):
 
     def test_get_non_existent_user(self):
         """Test getting a user who doesn't exist in db"""
-        self.signup_user()
-        token = self.login_user().data["token"]
+        self.regular_signup()
+        token = self.regular_login().data["token"]
         User.objects.get(email=self.test_user["user"]["email"]).delete()
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         self.base_token("User does not exist")

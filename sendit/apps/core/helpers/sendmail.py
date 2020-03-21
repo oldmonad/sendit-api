@@ -24,5 +24,5 @@ class SendMail:
 
     def send(self):
         mail = self._compose_mail()
-        mail.send(fail_silently=False)
+        mail.send(fail_silently=True)
         return True

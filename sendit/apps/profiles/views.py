@@ -9,26 +9,12 @@ from rest_framework.generics import (
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from sendit.apps.core.api_exceptions import ResourceDoesNotExist
 from sendit.apps.core.pagination import StandardPagination
 
-from .exceptions import ProfileDoesNotExist
 from .models import Profile
 from .renderers import ProfileJSONRenderer
 from .serializers import ProfileSerializer
-
-
-def current_user_profile(request):
-    authenticated_user = request.user
-    return authenticated_user.profile
-
-
-# def check_user_profile(request):
-#     try:
-#         following_user = current_user_profile(request)
-#         return following_user
-#     except Exception:
-#         raise NotFound(
-#             'You must be logged in first')
 
 
 class ListProfile(ListAPIView):
@@ -52,7 +38,7 @@ class ProfileRetrieveAPIView(RetrieveUpdateAPIView):
         try:
             profile = Profile.objects.select_related("user").get(user__email=email)
         except Profile.DoesNotExist:
-            raise ProfileDoesNotExist
+            raise ResourceDoesNotExist
 
         serializer = self.serializer_class(profile)
 
