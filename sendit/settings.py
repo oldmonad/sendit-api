@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     "django_redis",
     "rest_framework",
     "django_inlinecss",
+    "silk",
     "sendit.apps.authentication",
     "sendit.apps.core",
     "sendit.apps.profiles",
+    "sendit.apps.parcels",
 ]
 
 MIDDLEWARE = [
@@ -55,6 +57,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "silk.middleware.SilkyMiddleware",
 ]
 
 ROOT_URLCONF = "sendit.urls"
@@ -143,6 +146,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
 CORS_ORIGIN_WHITELIST = (

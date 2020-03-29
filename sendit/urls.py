@@ -17,10 +17,14 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("silk/", include("silk.urls", namespace="silk")),
     path(
         "api/v1/",
         include("sendit.apps.authentication.urls", namespace="app_authentication"),
     ),
     path("api/v1/", include("sendit.apps.profiles.urls", namespace="profiles")),
     path("", include("sendit.apps.authentication.urls")),
+    path(
+        "api/v1/", include(("sendit.apps.parcels.urls", "parcels"), namespace="parcels")
+    ),
 ]

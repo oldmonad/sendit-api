@@ -16,7 +16,7 @@ class TestUpdateUserProfile(TestBaseCase):
         return self.client.get(self.get_profile_url(self.email), format="json")
 
     def test_get_user_profile(self):
-        self.signup_user()
+        self.regular_signup()
         response = self.base_get_profile()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -25,7 +25,8 @@ class TestUpdateUserProfile(TestBaseCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_user_profile(self):
-        response = self.base_update_test(self.token())
+        self.regular_signup()
+        response = self.base_update_test(self.regular_login().data["token"])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_token_update_user_profile(self):
