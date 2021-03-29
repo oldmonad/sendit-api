@@ -43,7 +43,7 @@ psycopg2-binary==2.8.4
 py==1.8.1
 pycodestyle==2.5.0
 pyflakes==2.1.1
-Pygments==2.6.1
+Pygments==2.7.4
 PyJWT==1.7.1
 pynliner==0.8.0
 pyparsing==2.4.6
