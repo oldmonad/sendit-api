@@ -44,7 +44,7 @@ py==1.8.1
 pycodestyle==2.5.0
 pyflakes==2.1.1
 Pygments==2.6.1
-PyJWT==1.7.1
+PyJWT==2.4.0
 pynliner==0.8.0
 pyparsing==2.4.6
 python-dateutil==2.8.1
